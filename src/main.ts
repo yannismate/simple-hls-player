@@ -48,7 +48,10 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, "../public/index.html"));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if(app.commandLine.hasSwitch("dev-tools")) {
+    mainWindow.webContents.openDevTools();
+  }
+
 }
 
 // This method will be called when Electron has finished
