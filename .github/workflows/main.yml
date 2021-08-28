@@ -1,0 +1,33 @@
+name: build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Clone this repo
+        uses: actions/checkout@v2
+
+      - name: Setting up node
+        uses: actions/setup-node@v2
+
+      - name: Installing Dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Package
+        run: npm run package
+
+      - name: Upload packaged electron app
+        uses: actions/upload-artifact@v2
+        with:
+          name: RocketLink
+          path: pkg/simple-hls-player-win32-x64/
