@@ -3,8 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <title>Simple HLS Player</title>
+    <link href="index.css" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="default-src https: blob: file:; script-src 'self' 'nonce-f2340f920f' 'nonce-f2048fn024'; worker-src blob:">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src https: blob: file:; script-src 'self' 'nonce-f2340f920f' 'nonce-f2048fn024' worker-src blob:">
   </head>
   <body>
     <span id="hls-url"></span>
+    <video id="video"></video>
+    <script src="hls.js" nonce="f2340f920f"></script>
+    <script nonce="f2048fn024">
+      document.addEventListener('DOMContentLoaded', ()=> {
+        setTimeout(() => {
+          if(Hls.isSupported()) {
+
+            const video = document.getElementById('video');
+
+            const cfg = {
+              backBufferLength: 3,
+              liveSyncDuration: 5,
+              liveMaxLatencyDuration: 15
+            };
+
+            const hls = new Hls(cfg);
+            const url = document.getElementById('hls-url').innerText;
+
+            hls.attachMedia(video);
+
+            hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              console.log('video and hls.js are now bound together !');
+              console.log(`Loading ${url}`);
+              hls.loadSource(url);
+              hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                console.log(
+                    'manifest loaded, found ' + data.levels.length + ' quality level'
+                );
+                video.play();
+              });
+            });
+
+            hls.on(Hls.Events.ERROR, function (event, data) {
+              if (data.fatal) {
+                switch (data.type) {
+                  case Hls.ErrorTypes.NETWORK_ERROR:
+                    // try to recover network error
+                    console.log('fatal network error encountered, try to recover');
+                    hls.startLoad();
+                    break;
+                  case Hls.ErrorTypes.MEDIA_ERROR:
+                    console.log('fatal media error encountered, try to recover');
+                    hls.recoverMediaError();
+                    break;
+                  default:
+                    // cannot recover
+                    console.log(data);
+                    hls.destroy();
+                    break;
+                }
+              }
+            });
+
+          }
+        }, 500);
+      });
+    </script>
   </body>
 </html>
