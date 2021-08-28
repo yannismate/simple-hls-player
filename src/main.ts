@@ -3,8 +3,8 @@ import * as path from "path";
 
 function createWindow() {
 
-  let width: number = 1920;
-  let height: number = 1080;
+  let width = 1920;
+  let height = 1080;
 
   if(app.commandLine.hasSwitch("width")) {
     const val = app.commandLine.getSwitchValue("width");
