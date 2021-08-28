@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Installing Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Lint
         run: npm run lint
@@ -29,5 +29,5 @@ jobs:
       - name: Upload packaged electron app
         uses: actions/upload-artifact@v2
         with:
-          name: RocketLink
+          name: simple-hls-player
           path: pkg/simple-hls-player-win32-x64/
