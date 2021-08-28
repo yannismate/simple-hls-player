@@ -2,12 +2,45 @@ import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
 function createWindow() {
+
+  let width: number = 1920;
+  let height: number = 1080;
+
+  if(app.commandLine.hasSwitch("width")) {
+    const val = app.commandLine.getSwitchValue("width");
+    if(isNaN(parseInt(val))) throw new Error(`Given width is not a number "${val}"`);
+    width = parseInt(val);
+  }
+
+  if(app.commandLine.hasSwitch("height")) {
+    const val = app.commandLine.getSwitchValue("height");
+    if(isNaN(parseInt(val))) throw new Error(`Given height is not a number "${val}"`);
+    height = parseInt(val);
+  }
+
+  if(!app.commandLine.hasSwitch("url")) {
+    console.error("Argument --url is missing.");
+    app.quit();
+    return;
+  }
+
+  const url = app.commandLine.getSwitchValue("url");
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    height: height,
+    width: width,
+    useContentSize: true,
+    title: "Simple HLS Player",
+    frame: false,
+    titleBarStyle: "hidden",
     webPreferences: {
+      nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
+      webSecurity: false, //Allow cross origin content to load HLS playlist
+      allowRunningInsecureContent: false,
+      contextIsolation: true,
+      additionalArguments: [`hls-url=${url}`]
     }
   });
 
