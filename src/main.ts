@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import * as path from "path";
 
 function createWindow() {
@@ -26,13 +26,15 @@ function createWindow() {
 
   const url = app.commandLine.getSwitchValue("url");
 
+  const factor = screen.getPrimaryDisplay().scaleFactor;
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: height,
-    width: width,
+    height: height / factor,
+    width: width / factor,
     useContentSize: true,
     title: "Simple HLS Player",
-    frame: false,
+    autoHideMenuBar: true,
     titleBarStyle: "hidden",
     webPreferences: {
       nodeIntegration: false,
@@ -45,6 +47,7 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
+  mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile(path.join(__dirname, "../public/index.html"));
 
   // Open the DevTools.
