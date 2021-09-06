@@ -36,6 +36,8 @@ function createWindow() {
     title: "Simple HLS Player",
     autoHideMenuBar: true,
     titleBarStyle: "hidden",
+    backgroundColor: "#242424",
+    show: false,
     webPreferences: {
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
@@ -45,6 +47,8 @@ function createWindow() {
       additionalArguments: [`hls-url=${url}`]
     }
   });
+
+  mainWindow.once('ready-to-show', mainWindow.show);
 
   // and load the index.html of the app.
   mainWindow.setMenuBarVisibility(false);
