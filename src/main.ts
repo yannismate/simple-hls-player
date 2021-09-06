@@ -18,6 +18,8 @@ function createWindow() {
     height = parseInt(val);
   }
 
+  const windowArgs = [];
+
   if(!app.commandLine.hasSwitch("url")) {
     console.error("Argument --url is missing.");
     app.quit();
@@ -25,6 +27,14 @@ function createWindow() {
   }
 
   const url = app.commandLine.getSwitchValue("url");
+  windowArgs.push(`--hls-url=${url}`);
+
+  if(app.commandLine.hasSwitch("load-img")) {
+    const val = app.commandLine.getSwitchValue("load-img");
+    windowArgs.push(`--load-img=${val}`);
+  }
+
+  console.log(windowArgs);
 
   const factor = screen.getPrimaryDisplay().scaleFactor;
 
@@ -44,7 +54,7 @@ function createWindow() {
       webSecurity: false, //Allow cross origin content to load HLS playlist
       allowRunningInsecureContent: false,
       contextIsolation: true,
-      additionalArguments: [`hls-url=${url}`]
+      additionalArguments: windowArgs
     }
   });
 

@@ -10,8 +10,10 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   for(const arg of window.process.argv) {
-    if(arg.startsWith("hls-url=")) {
-      replaceText('hls-url', arg.substr(8));
+    if(arg.startsWith("--hls-url=")) {
+      replaceText('hls-url', arg.substr(10));
+    } else if(arg.startsWith("--load-img=")) {
+      document.getElementById("video").setAttribute("poster", arg.substr(11));
     }
   }
 
