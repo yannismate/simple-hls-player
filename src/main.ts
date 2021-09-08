@@ -34,8 +34,6 @@ function createWindow() {
     windowArgs.push(`--load-img=${val}`);
   }
 
-  console.log(windowArgs);
-
   const factor = screen.getPrimaryDisplay().scaleFactor;
 
   // Create the browser window.
